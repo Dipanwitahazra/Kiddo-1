@@ -91,7 +91,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   private boolean computingDetection = false;
   private boolean addPending = false;
-  //private boolean adding = false;
 
   private long timestamp = 0;
 
@@ -118,12 +117,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     super.onCreate(savedInstanceState);
 
     fabAdd = findViewById(R.id.fab_add);
-    fabAdd.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        onAddClick();
-      }
-    });
+    fabAdd.setOnClickListener(view -> onAddClick());
 
     // Real-time contour detection of multiple faces
     FaceDetectorOptions options =
@@ -138,13 +132,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   }
 
-
-
   private void onAddClick() {
-
     addPending = true;
-    //Toast.makeText(this, "click", Toast.LENGTH_LONG ).show();
-
   }
 
   @Override
@@ -156,7 +145,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     borderedText.setTypeface(Typeface.MONOSPACE);
 
     tracker = new MultiBoxTracker(this);
-
 
     try {
       detector =
@@ -210,11 +198,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     cropW, cropH,
                     sensorOrientation, MAINTAIN_ASPECT);
 
-//    frameToCropTransform =
-//            ImageUtils.getTransformationMatrix(
-//                    previewWidth, previewHeight,
-//                    previewWidth, previewHeight,
-//                    sensorOrientation, MAINTAIN_ASPECT);
 
     cropToFrameTransform = new Matrix();
     frameToCropTransform.invert(cropToFrameTransform);
@@ -313,15 +296,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     TF_OD_API;
   }
 
-  @Override
-  protected void setUseNNAPI(final boolean isChecked) {
-    runInBackground(() -> detector.setUseNNAPI(isChecked));
-  }
-
-  @Override
-  protected void setNumThreads(final int numThreads) {
-    runInBackground(() -> detector.setNumThreads(numThreads));
-  }
 
 
   // Face Processing
@@ -345,14 +319,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
       matrix.postRotate(applyRotation);
     }
 
-//        // Account for the already applied rotation, if any, and then determine how
-//        // much scaling is needed for each axis.
-//        final boolean transpose = (Math.abs(applyRotation) + 90) % 180 == 0;
-//        final int inWidth = transpose ? srcHeight : srcWidth;
-//        final int inHeight = transpose ? srcWidth : srcHeight;
-
     if (applyRotation != 0) {
-
       // Translate back from origin centered reference to destination frame.
       matrix.postTranslate(dstWidth / 2.0f, dstHeight / 2.0f);
     }
@@ -409,15 +376,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     }
 
-    runOnUiThread(
-            new Runnable() {
-              @Override
-              public void run() {
-                showFrameInfo(previewWidth + "x" + previewHeight);
-                showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
-                showInference(lastProcessingTimeMs + "ms");
-              }
-            });
 
   }
 
@@ -490,8 +448,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         cvFace.drawBitmap(portraitBmp, matrix, null);
 
-        //canvas.drawRect(faceBB, paint);
-
         String label = "";
         float confidence = -1f;
         Integer color = Color.BLUE;
@@ -515,10 +471,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
           SimilarityClassifier.Recognition result = resultsAux.get(0);
 
           extra = result.getExtra();
-//          Object extra = result.getExtra();
-//          if (extra != null) {
-//            LOGGER.i("embeeding retrieved " + extra.toString());
-//          }
 
           float conf = result.getDistance();
           if (conf < 1.0f) {
@@ -561,17 +513,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         mappedRecognitions.add(result);
 
       }
-
-
     }
-
-    //    if (saved) {
-//      lastSaved = System.currentTimeMillis();
-//    }
-
     updateResults(currTimestamp, mappedRecognitions);
-
-
   }
 
 }
