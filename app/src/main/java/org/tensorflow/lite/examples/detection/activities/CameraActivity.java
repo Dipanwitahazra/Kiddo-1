@@ -89,9 +89,9 @@ public abstract class CameraActivity extends AppCompatActivity
   private Runnable postInferenceCallback;
   private Runnable imageConverter;
 
-  private LinearLayout bottomSheetLayout;
+  //private LinearLayout bottomSheetLayout;
   private LinearLayout gestureLayout;
-  private BottomSheetBehavior<LinearLayout> sheetBehavior;
+  //private BottomSheetBehavior<LinearLayout> sheetBehavior;
 
   protected TextView frameValueTextView, cropValueTextView, inferenceTimeTextView;
   protected ImageView bottomSheetArrowImageView;
@@ -122,11 +122,8 @@ public abstract class CameraActivity extends AppCompatActivity
     useFacing = intent.getIntExtra(KEY_USE_FACING, CameraCharacteristics.LENS_FACING_FRONT);
 
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
     setContentView(R.layout.tfe_od_activity_camera);
-    Toolbar toolbar = findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
     if (hasPermission()) {
       setFragment();
@@ -138,9 +135,9 @@ public abstract class CameraActivity extends AppCompatActivity
     plusImageView = findViewById(R.id.plus);
     minusImageView = findViewById(R.id.minus);
     apiSwitchCompat = findViewById(R.id.api_info_switch);
-    bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
+    //bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
     gestureLayout = findViewById(R.id.gesture_layout);
-    sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
+    //sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
     bottomSheetArrowImageView = findViewById(R.id.bottom_sheet_arrow);
 
     btnSwitchCam = findViewById(R.id.fab_switchcam);
@@ -158,12 +155,12 @@ public abstract class CameraActivity extends AppCompatActivity
             //                int width = bottomSheetLayout.getMeasuredWidth();
             int height = gestureLayout.getMeasuredHeight();
 
-            sheetBehavior.setPeekHeight(height);
+            //sheetBehavior.setPeekHeight(height);
           }
         });
-    sheetBehavior.setHideable(false);
+    //sheetBehavior.setHideable(false);
 
-    sheetBehavior.setBottomSheetCallback(
+    /*sheetBehavior.setBottomSheetCallback(
         new BottomSheetBehavior.BottomSheetCallback() {
           @Override
           public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -190,7 +187,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
           @Override
           public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
-        });
+        });*/
 
     frameValueTextView = findViewById(R.id.frame_info);
     cropValueTextView = findViewById(R.id.crop_info);
