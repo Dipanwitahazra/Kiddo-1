@@ -3,9 +3,8 @@ apply plugin: 'de.undercouch.download'
 
 android {
     compileSdkVersion 33
-    buildToolsVersion '28.0.3'
     defaultConfig {
-        applicationId "org.tensorflow.lite.examples.facerecognition"
+        applicationId "com.parentalcontrol.panjacreation.kiddo"
         minSdkVersion 28
         targetSdkVersion 33
         versionCode 1
@@ -27,6 +26,7 @@ android {
     lintOptions {
         abortOnError false
     }
+    namespace 'com.parental.control.panjacreation.kiddo'
 }
 
 // import DownloadModels task
