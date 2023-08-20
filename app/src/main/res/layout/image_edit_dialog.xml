@@ -21,8 +21,7 @@
         android:layout_height="200dp"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_baseline_image_24"
-        />
+        android:src="@drawable/ic_baseline_image_24" />
 
     <EditText
         android:layout_gravity="center"
@@ -30,7 +29,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:hint="The dialog hint"
-        />
+        android:inputType="text" />
+
+    <RadioGroup
+        android:id="@+id/parent_child_RG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:checkedButton="@id/parent">
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parent" />
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/child"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Child"/>
+    </RadioGroup>
+
 
 
 </LinearLayout>

@@ -3,4 +3,5 @@
     <string name="tfe_od_camera_error" translation_description="Error regarding camera support[CHAR_LIMIT=40]">This device doesn\'t support Camera2 API.</string>
     <string name="switch_camera">Switch the camera</string>
     <string name="add_face">Add this face</string>
+    <string name="add_this_face">Add this Face</string>
 </resources>

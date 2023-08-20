@@ -23,7 +23,7 @@ import java.util.List;
 /** Generic interface for interacting with different recognition engines. */
 public interface SimilarityClassifier {
 
-  void register(String name, Recognition recognition, Context context);
+  void register(String name, boolean isParent, Recognition recognition, Context context);
 
   List<Recognition> recognizeImage(Bitmap bitmap, boolean getExtra, Context context);
 
@@ -58,11 +58,13 @@ public interface SimilarityClassifier {
     private RectF location;
     private Integer color;
     private Bitmap crop;
+    private final boolean isParent;
 
     public Recognition(
-            final String id, final String title, final Float distance, final RectF location) {
+            final String id, final String title, boolean isParent, final Float distance, final RectF location) {
       this.id = id;
       this.title = title;
+      this.isParent = isParent;
       this.distance = distance;
       this.location = location;
       this.color = null;
@@ -133,6 +135,10 @@ public interface SimilarityClassifier {
 
     public Bitmap getCrop() {
       return this.crop;
+    }
+
+    public boolean isParent() {
+      return isParent;
     }
   }
 }

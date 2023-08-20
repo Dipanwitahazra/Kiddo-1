@@ -2,7 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'de.undercouch.download'
 
 android {
-    compileSdkVersion 33
+    namespace 'com.parental.control.panjacreation.kiddo'
+    compileSdk 33
+
     defaultConfig {
         applicationId "com.parentalcontrol.panjacreation.kiddo"
         minSdkVersion 28
@@ -16,17 +18,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     aaptOptions {
         noCompress "tflite"
     }
     compileOptions {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     lintOptions {
         abortOnError false
     }
-    namespace 'com.parental.control.panjacreation.kiddo'
 }
 
 // import DownloadModels task
@@ -43,7 +45,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation('org.tensorflow:tensorflow-lite:0.0.0-nightly') { changing = true }
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'

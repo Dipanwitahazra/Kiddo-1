@@ -7,4 +7,6 @@ public class Constants {
     public static final String TF_OD_API_MODEL_FILE = "mobile_face_net.tflite";
     public static final String TF_OD_API_LABELS_FILE = "file:///android_asset/labelmap.txt";
     public static final int NOTIFICATION_ID_BACKGROUND = 1;
+    public static final String STORED_REC_KEY = "faces";
+    public static final String PREFERENCE_FILE_KEY = "kiddo";
 }

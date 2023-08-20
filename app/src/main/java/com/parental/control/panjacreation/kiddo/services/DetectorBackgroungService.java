@@ -172,6 +172,7 @@ public class DetectorBackgroungService extends Service {
                     try {
                         List<SimilarityClassifier.Recognition> resultsAux = detector.recognizeImage(faceBmp, false, getApplicationContext());
                         Log.d("RecognitionSuccess", "This is the result: "+resultsAux.get(0).getTitle());
+                        Log.d("RecognitionSuccess", "isParent: "+resultsAux.get(0).isParent());
                         currentUser = resultsAux.get(0).getTitle();
                         if(!currentUser.equals(previousUser)){
                             previousUser = currentUser;

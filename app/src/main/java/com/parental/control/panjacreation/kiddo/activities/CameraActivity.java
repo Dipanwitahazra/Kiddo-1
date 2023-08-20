@@ -85,6 +85,8 @@ public abstract class CameraActivity extends AppCompatActivity implements OnImag
   private Integer useFacing = null;
   private String cameraId = null;
 
+
+
   protected Integer getCameraFacing() {
     return useFacing;
   }

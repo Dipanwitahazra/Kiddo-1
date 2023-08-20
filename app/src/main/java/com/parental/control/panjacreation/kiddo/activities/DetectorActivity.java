@@ -37,10 +37,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
@@ -108,7 +110,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   // here the face is cropped and drawn
   private Bitmap faceBmp = null;
 
-  private FloatingActionButton fabAdd;
+  private MaterialButton fabAdd;
 
 
   @Override
@@ -335,6 +337,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     ImageView ivFace = dialogLayout.findViewById(R.id.dlg_image);
     TextView tvTitle = dialogLayout.findViewById(R.id.dlg_title);
     EditText etName = dialogLayout.findViewById(R.id.dlg_input);
+    RadioGroup radioGroup = dialogLayout.findViewById(R.id.parent_child_RG);
 
     tvTitle.setText("Add Face");
     ivFace.setImageBitmap(rec.getCrop());
@@ -345,10 +348,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
       public void onClick(DialogInterface dlg, int i) {
 
           String name = etName.getText().toString();
+          boolean isParent = radioGroup.getCheckedRadioButtonId() == R.id.parent;
+
           if (name.isEmpty()) {
               return;
           }
-          detector.register(name, rec, getApplicationContext());
+          detector.register(name,isParent, rec, getApplicationContext());
           //knownFaces.put(name, rec);
           dlg.dismiss();
       }
@@ -448,6 +453,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         cvFace.drawBitmap(portraitBmp, matrix, null);
 
         String label = "";
+        boolean isParent = true;
         float confidence = -1f;
         Integer color = Color.BLUE;
         float[][] extra = null;
@@ -476,6 +482,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             confidence = conf;
             label = result.getTitle();
+            isParent = result.isParent();
             if (result.getId().equals("0")) {
               color = Color.GREEN;
             }
@@ -503,7 +510,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         }
 
         final SimilarityClassifier.Recognition result = new SimilarityClassifier.Recognition(
-                "0", label, confidence, boundingBox);
+                "0", label, isParent, confidence, boundingBox);
 
         result.setColor(color);
         result.setLocation(boundingBox);

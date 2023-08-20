@@ -28,6 +28,10 @@ import android.util.Pair;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.parental.control.panjacreation.kiddo.env.Logger;
+import com.parental.control.panjacreation.kiddo.models.NearestModel;
+import com.parental.control.panjacreation.kiddo.models.RecognitionModel;
+import com.parental.control.panjacreation.kiddo.util.Constants;
+import com.parental.control.panjacreation.kiddo.util.DBhandler;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -41,6 +45,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -101,10 +106,10 @@ public class TFLiteObjectDetectionAPIModel
 // Face Mask Detector Output
   private float[][] output;
 
-  private HashMap<String, Recognition> registered = new HashMap<>();
-  public void register(String name, Recognition rec, Context context) {
-      registered.put(name, rec);
-      saveData(context);
+  private List<RecognitionModel> registered = new LinkedList<>();
+  public void register(String name, boolean isParent, Recognition rec, Context context) {
+      registered.add(new RecognitionModel(name,isParent,rec));
+      new DBhandler(context){}.saveRegistered(registered);
   }
 
   private TFLiteObjectDetectionAPIModel() {}
@@ -179,31 +184,28 @@ public class TFLiteObjectDetectionAPIModel
 
   // looks for the nearest embeeding in the dataset (using L2 norm)
   // and retrurns the pair <id, distance>
-  private Pair<String, Float> findNearest(float[] emb) {
-    Pair<String, Float> ret = null;
-    for (Map.Entry<String, Recognition> entry : registered.entrySet()) {
-        final String name = entry.getKey();
-        final float[] knownEmb = ((float[][]) entry.getValue().getExtra())[0];
-
+  private NearestModel findNearest(float[] emb) {
+    NearestModel ret = null;
+    for (RecognitionModel entry : registered) {
+        final float[] knownEmb = ((float[][]) entry.getRec().getExtra())[0];
         float distance = 0;
         for (int i = 0; i < emb.length; i++) {
               float diff = emb[i] - knownEmb[i];
               distance += diff*diff;
         }
         distance = (float) Math.sqrt(distance);
-        if (ret == null || distance < ret.second) {
-            ret = new Pair<>(name, distance);
+        if (ret == null || distance < ret.getDistance()) {
+            ret = new NearestModel(entry.getName(), distance, entry.isParent());
         }
     }
-
     return ret;
-
   }
 
 
   @Override
   public List<Recognition> recognizeImage(final Bitmap bitmap, boolean storeExtra, Context context) {
-    if(registered.size()==0) loadData(context);
+    if(registered.size()==0) registered = new DBhandler(context){}.loadRegistered();
+
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
 
@@ -251,28 +253,23 @@ public class TFLiteObjectDetectionAPIModel
     tfLite.runForMultipleInputsOutputs(inputArray, outputMap);
     Trace.endSection();
 
-//    String res = "[";
-//    for (int i = 0; i < embeedings[0].length; i++) {
-//      res += embeedings[0][i];
-//      if (i < embeedings[0].length - 1) res += ", ";
-//    }
-//    res += "]";
-
 
     float distance = Float.MAX_VALUE;
     String id = "0";
     String label = "?";
+    boolean isParent = true;
 
     if (registered.size() > 0) {
         //LOGGER.i("dataset SIZE: " + registered.size());
-        final Pair<String, Float> nearest = findNearest(embeedings[0]);
+        final NearestModel nearest = findNearest(embeedings[0]);
         if (nearest != null) {
 
-            final String name = nearest.first;
+            final String name = nearest.getName();
             label = name;
-            distance = nearest.second;
+            distance = nearest.getDistance();
+            isParent = nearest.isParent();
 
-            LOGGER.i("nearest: " + name + " - distance: " + distance);
+            LOGGER.i("nearest: " + name + " - distance: " + distance + " - isParent: " + isParent);
 
 
         }
@@ -284,6 +281,7 @@ public class TFLiteObjectDetectionAPIModel
     Recognition rec = new Recognition(
             id,
             label,
+            isParent,
             distance,
             new RectF());
 
@@ -315,25 +313,6 @@ public class TFLiteObjectDetectionAPIModel
   @Override
   public void setUseNNAPI(boolean isChecked) {
     if (tfLite != null) tfLite.setUseNNAPI(isChecked);
-  }
-
-  private void saveData(Context context){
-    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-    SharedPreferences.Editor editor = prefs.edit();
-    Gson gson = new Gson();
-    String json = gson.toJson(registered);
-    editor.putString("faces", json).apply();
-  }
-
-  private void loadData(Context context){
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    Gson gson = new Gson();
-    String json = sharedPreferences.getString("faces", null);
-    if(json != null){
-      Type type = new TypeToken<HashMap<String, Recognition>>() {}.getType();
-      HashMap<String, Recognition> list = gson.fromJson(json, type);
-      registered = list;
-    }
   }
 
 }
