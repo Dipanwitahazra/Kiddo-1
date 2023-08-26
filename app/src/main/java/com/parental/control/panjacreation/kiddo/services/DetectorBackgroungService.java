@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -12,6 +13,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 
 import android.os.Build;
+
 
 import android.os.IBinder;
 
@@ -42,7 +44,6 @@ import com.parental.control.panjacreation.kiddo.util.Constants;
 import com.parental.control.panjacreation.kiddo.R;
 
 import java.io.IOException;
-
 import java.util.List;
 
 
@@ -53,6 +54,7 @@ public class DetectorBackgroungService extends Service {
     private FaceDetector faceDetector;
     private SimilarityClassifier detector;
     BitmapFormater bitmapFormater = new BitmapFormater();
+
 
     @Override
     public void onCreate() {
@@ -96,6 +98,11 @@ public class DetectorBackgroungService extends Service {
 
         return START_STICKY;
     }
+
+
+
+
+
 
     private void takePhoto() {
 
@@ -151,7 +158,6 @@ public class DetectorBackgroungService extends Service {
                     image = bitmapFormater.resizeBitmap(image,240,320);
                     if (isRunning)
                         recogniseFace(image,camera);
-                    //camera.release();
                 }
             });
         } catch (Exception e){
@@ -239,7 +245,6 @@ public class DetectorBackgroungService extends Service {
     @Override
     public void onDestroy() {
         isRunning = false;
-        stopSelf();
         super.onDestroy();
     }
 }
