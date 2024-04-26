@@ -373,11 +373,7 @@ public abstract class CameraActivity extends AppCompatActivity implements OnImag
   }
 
   private boolean hasPermission() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED && checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(PERMISSION_FOREGROUND_SERVICE) == PackageManager.PERMISSION_GRANTED;
-    } else {
-      return true;
-    }
+      return checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED;
   }
 
   private void requestPermission() {
