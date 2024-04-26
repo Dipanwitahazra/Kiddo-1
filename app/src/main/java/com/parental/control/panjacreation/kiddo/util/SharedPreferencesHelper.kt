@@ -19,4 +19,28 @@ object SharedPreferencesHelper {
         val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return prefs.getStringSet(HASHSET_KEY, HashSet<String>()) as HashSet<String>
     }
+
+    fun saveString(context: Context, key: String, value: String?) {
+        val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putString(key, value)
+        editor.apply()
+    }
+
+    fun getString(context: Context, key: String, default: String? = null): String?{
+        val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getString(key, default)
+    }
+
+    fun saveBoolean(context: Context, key: String, value: Boolean) {
+        val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putBoolean(key, value)
+        editor.apply()
+    }
+
+    fun getBoolean(context: Context, key: String, default: Boolean = true): Boolean{
+        val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getBoolean(key, default)
+    }
 }

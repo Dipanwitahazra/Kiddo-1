@@ -9,4 +9,7 @@ public class Constants {
     public static final int NOTIFICATION_ID_BACKGROUND = 1;
     public static final String STORED_REC_KEY = "faces";
     public static final String PREFERENCE_FILE_KEY = "kiddo";
+
+    public static final String CURRENT_USER = "current_user";
+    public static final String IS_PARENT = "is_parent";
 }

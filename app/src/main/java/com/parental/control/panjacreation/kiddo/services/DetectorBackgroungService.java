@@ -42,6 +42,7 @@ import com.parental.control.panjacreation.kiddo.util.BitmapFormater;
 import com.parental.control.panjacreation.kiddo.util.Constants;
 
 import com.parental.control.panjacreation.kiddo.R;
+import com.parental.control.panjacreation.kiddo.util.SharedPreferencesHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -183,6 +184,8 @@ public class DetectorBackgroungService extends Service {
                         if(!currentUser.equals(previousUser)){
                             previousUser = currentUser;
                             Toast.makeText(DetectorBackgroungService.this, "Current User: "+currentUser, Toast.LENGTH_SHORT).show();
+                            //SharedPreferencesHelper.INSTANCE.saveString(getApplicationContext(), Constants.CURRENT_USER, currentUser);
+                            SharedPreferencesHelper.INSTANCE.saveBoolean(getApplicationContext(), Constants.IS_PARENT, resultsAux.get(0).isParent());
                         }
                         //Toast.makeText(getApplicationContext(), "Current user: "+resultsAux.get(0).getTitle(), Toast.LENGTH_SHORT).show();
                     } catch (Exception e){
