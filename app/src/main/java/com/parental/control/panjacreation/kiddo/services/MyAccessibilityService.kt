@@ -7,6 +7,9 @@ import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import com.parental.control.panjacreation.kiddo.util.Constants
 import com.parental.control.panjacreation.kiddo.util.SharedPreferencesHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MyAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -16,12 +19,20 @@ class MyAccessibilityService : AccessibilityService() {
 
             if (restrictedPackageSet.contains(packageName)){
                 startBackgroundRecognition()
-                val isParent = SharedPreferencesHelper.getBoolean(applicationContext, Constants.IS_PARENT)
-                if (!isParent) {
-                    performGlobalAction(GLOBAL_ACTION_BACK)
-                    stopBackgroundRecognition()
-                    SharedPreferencesHelper.saveBoolean(applicationContext, Constants.IS_PARENT, true)
+                var isParent = SharedPreferencesHelper.getBoolean(applicationContext, Constants.IS_PARENT)
+                CoroutineScope(Dispatchers.IO).launch {
+                    do {
+                        isParent = SharedPreferencesHelper.getBoolean(applicationContext, Constants.IS_PARENT)
+                        Log.d("Trigger: ", "Enter")
+                        if (!isParent) {
+                            performGlobalAction(GLOBAL_ACTION_BACK)
+                            Log.d("Trigger: ", "back")
+                            stopBackgroundRecognition()
+                            SharedPreferencesHelper.saveBoolean(applicationContext, Constants.IS_PARENT, true)
+                        }
+                    } while (isParent)
                 }
+
             } else {
                 try {
                     stopBackgroundRecognition()
