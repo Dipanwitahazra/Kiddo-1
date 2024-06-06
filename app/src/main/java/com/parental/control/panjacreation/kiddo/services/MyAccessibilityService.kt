@@ -9,6 +9,8 @@ import com.parental.control.panjacreation.kiddo.util.Constants
 import com.parental.control.panjacreation.kiddo.util.SharedPreferencesHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MyAccessibilityService : AccessibilityService() {
@@ -19,18 +21,21 @@ class MyAccessibilityService : AccessibilityService() {
 
             if (restrictedPackageSet.contains(packageName)){
                 startBackgroundRecognition()
-                var isParent = SharedPreferencesHelper.getBoolean(applicationContext, Constants.IS_PARENT)
+                //var isParent: Boolean
                 CoroutineScope(Dispatchers.IO).launch {
                     do {
-                        isParent = SharedPreferencesHelper.getBoolean(applicationContext, Constants.IS_PARENT)
+                        //isParent = SharedPreferencesHelper.getBoolean(applicationContext, Constants.IS_PARENT)
                         Log.d("Trigger: ", "Enter")
-                        if (!isParent) {
+                        if (!Constants.isParent) {
+                            performGlobalAction(GLOBAL_ACTION_BACK)
                             performGlobalAction(GLOBAL_ACTION_BACK)
                             Log.d("Trigger: ", "back")
                             stopBackgroundRecognition()
+                            cancel()
                             SharedPreferencesHelper.saveBoolean(applicationContext, Constants.IS_PARENT, true)
                         }
-                    } while (isParent)
+                        delay(100)
+                    } while (Constants.isParent)
                 }
 
             } else {

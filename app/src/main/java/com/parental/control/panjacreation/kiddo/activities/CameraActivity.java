@@ -292,7 +292,7 @@ public abstract class CameraActivity extends AppCompatActivity implements OnImag
   @Override
   public synchronized void onResume() {
     LOGGER.d("onResume " + this);
-    //stopBackgroundRecognition();
+    stopBackgroundRecognition();
     super.onResume();
 
     handlerThread = new HandlerThread("inference");

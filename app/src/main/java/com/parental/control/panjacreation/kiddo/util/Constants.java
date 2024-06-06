@@ -12,4 +12,5 @@ public class Constants {
 
     public static final String CURRENT_USER = "current_user";
     public static final String IS_PARENT = "is_parent";
+    public static Boolean isParent = false;
 }
