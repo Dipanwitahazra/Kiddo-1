@@ -77,7 +77,11 @@ class MainActivity : AppCompatActivity() {
         val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         val enabledServices = Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
         val colonSplitter = TextUtils.SimpleStringSplitter(':')
-        colonSplitter.setString(enabledServices)
+        try {
+            colonSplitter.setString(enabledServices)
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
         while (colonSplitter.hasNext()) {
             if (colonSplitter.next().equals(context.packageName + "/" + service.name, ignoreCase = true)) {
                 return true
