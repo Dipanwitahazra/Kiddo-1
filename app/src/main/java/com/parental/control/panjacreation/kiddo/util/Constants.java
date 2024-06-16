@@ -10,7 +10,7 @@ public class Constants {
     public static final String STORED_REC_KEY = "faces";
     public static final String PREFERENCE_FILE_KEY = "kiddo";
 
-    public static final String CURRENT_USER = "current_user";
+    public static String CURRENT_USER = "current_user";
     public static final String IS_PARENT = "is_parent";
-    public static Boolean isParent = false;
+    public static Boolean isParent = null;
 }

@@ -93,7 +93,11 @@ public class DetectorBackgroungService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Create a notification for the foreground service
         Notification notification = createNotification();
-        startForeground(Constants.NOTIFICATION_ID_BACKGROUND, notification);
+        try {
+            startForeground(Constants.NOTIFICATION_ID_BACKGROUND, notification);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         takePhoto();
 
@@ -182,11 +186,12 @@ public class DetectorBackgroungService extends Service {
                         Log.d("RecognitionSuccess", "isParent: "+resultsAux.get(0).isParent());
                         Constants.isParent = resultsAux.get(0).isParent();
                         currentUser = resultsAux.get(0).getTitle();
+                        Constants.CURRENT_USER = currentUser;
                         if(!currentUser.equals(previousUser)){
                             previousUser = currentUser;
                             Toast.makeText(DetectorBackgroungService.this, "Current User: "+currentUser, Toast.LENGTH_SHORT).show();
                             //SharedPreferencesHelper.INSTANCE.saveString(getApplicationContext(), Constants.CURRENT_USER, currentUser);
-                            SharedPreferencesHelper.INSTANCE.saveBoolean(getApplicationContext(), Constants.IS_PARENT, resultsAux.get(0).isParent());
+                            //SharedPreferencesHelper.INSTANCE.saveBoolean(getApplicationContext(), Constants.IS_PARENT, resultsAux.get(0).isParent());
                         }
                         //Toast.makeText(getApplicationContext(), "Current user: "+resultsAux.get(0).getTitle(), Toast.LENGTH_SHORT).show();
                     } catch (Exception e){

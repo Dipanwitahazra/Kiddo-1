@@ -24,18 +24,23 @@ class MyAccessibilityService : AccessibilityService() {
                 //var isParent: Boolean
                 CoroutineScope(Dispatchers.IO).launch {
                     do {
+                        delay(300)
+                        if (Constants.isParent == null ){
+                            continue
+                        }
                         //isParent = SharedPreferencesHelper.getBoolean(applicationContext, Constants.IS_PARENT)
                         Log.d("Trigger: ", "Enter")
+                        Log.d("User: ","IsParent: "+Constants.isParent+" Name: "+Constants.CURRENT_USER)
                         if (!Constants.isParent) {
                             performGlobalAction(GLOBAL_ACTION_BACK)
                             performGlobalAction(GLOBAL_ACTION_BACK)
                             Log.d("Trigger: ", "back")
                             stopBackgroundRecognition()
                             cancel()
-                            SharedPreferencesHelper.saveBoolean(applicationContext, Constants.IS_PARENT, true)
+                            Constants.isParent = null
+                            //SharedPreferencesHelper.saveBoolean(applicationContext, Constants.IS_PARENT, true)
                         }
-                        delay(100)
-                    } while (Constants.isParent)
+                    } while (Constants.isParent == null || (Constants.isParent == true))
                 }
 
             } else {
